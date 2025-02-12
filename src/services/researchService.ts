@@ -1,12 +1,6 @@
 
-import { ResearchEngine } from '../../research_lib/src/engine';
-import { InsightGenerator } from '../../research_lib/src/insights';
-
-const researchEngine = new ResearchEngine({
-  openaiKey: process.env.OPENAI_API_KEY,
-  firecrawlKey: process.env.FIRECRAWL_KEY
-});
-const insightGenerator = new InsightGenerator();
+import { createModel } from '../../research_lib/lib/deep-research/ai/providers';
+import { deepResearch } from '../../research_lib/lib/deep-research/deep-research';
 
 export interface ResearchInsight {
   topic: string;
@@ -17,18 +11,25 @@ export interface ResearchInsight {
 }
 
 export async function generateInsights(executive: string, industry: string): Promise<ResearchInsight[]> {
-  const researchData = await researchEngine.fetchData({ 
-    query: `${executive} ${industry}`,
-    limit: 5
+  const model = createModel({
+    provider: 'openai',
+    apiKey: process.env.OPENAI_API_KEY
+  });
+
+  const query = `Research about ${executive} in the ${industry} industry`;
+  const research = await deepResearch({
+    query,
+    breadth: 3,
+    depth: 2,
+    model,
+    firecrawlKey: process.env.FIRECRAWL_KEY
   });
   
-  const insights = await insightGenerator.processData(researchData);
-  
-  return insights.map(insight => ({
-    topic: insight.title,
-    summary: insight.content,
-    relevance: insight.relevanceScore,
+  return research.learnings.map(learning => ({
+    topic: "Research Finding",
+    summary: learning,
+    relevance: 90,
     timestamp: new Date().toISOString(),
-    source: insight.source
+    source: "AI Research"
   }));
 }

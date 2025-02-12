@@ -85,6 +85,10 @@ app.get('/api/activity', auth, (req, res) => {
 app.get('/api/research/insights', auth, async (req, res) => {
   const { executive, industry } = req.query;
   
+  if (!process.env.OPENAI_API_KEY || !process.env.FIRECRAWL_KEY) {
+    return res.status(500).json({ error: 'Missing API keys' });
+  }
+  
   try {
     const { generateInsights } = require('../services/researchService');
     const insights = await generateInsights(executive, industry);
