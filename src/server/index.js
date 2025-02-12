@@ -82,28 +82,17 @@ app.get('/api/activity', auth, (req, res) => {
 });
 
 // Research insights endpoint
-app.get('/api/research/insights', auth, (req, res) => {
+app.get('/api/research/insights', auth, async (req, res) => {
   const { executive, industry } = req.query;
   
-  // Simulated research insights - replace with actual data fetching logic
-  const insights = [
-    {
-      topic: `${industry || 'Industry'} Market Trends`,
-      summary: `Recent analysis shows significant growth in ${industry} sector, with emerging opportunities in digital transformation.`,
-      relevance: 95,
-      timestamp: new Date().toISOString(),
-      source: "Market Research Report 2024"
-    },
-    {
-      topic: "Strategic Developments",
-      summary: `Key strategic moves in ${executive}'s organization indicate focus on sustainability and innovation.`,
-      relevance: 88,
-      timestamp: new Date().toISOString(),
-      source: "Industry Analytics"
-    }
-  ];
-  
-  res.json(insights);
+  try {
+    const { generateInsights } = require('../services/researchService');
+    const insights = await generateInsights(executive, industry);
+    res.json(insights);
+  } catch (error) {
+    console.error('Research insight generation error:', error);
+    res.status(500).json({ error: 'Failed to generate research insights' });
+  }
 });
 
 app.get('/api/executives', auth, (req, res) => {
