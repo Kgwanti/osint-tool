@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { SearchBar } from "@/components/SearchBar";
 import { FilterBar } from "@/components/FilterBar";
 import { ExecutiveCard } from "@/components/ExecutiveCard";
-import { UserProfile } from "../components/UserProfile";
-import { ActivityFeed } from "../components/ActivityFeed";
-import { ResearchInsights } from "../components/ResearchInsights";
+import { UserProfile } from "@/components/UserProfile";
+import { ActivityFeed } from "@/components/ActivityFeed";
+import { ResearchInsights } from "@/components/ResearchInsights";
 
 interface Executive {
   id: number;

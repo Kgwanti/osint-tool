@@ -8,7 +8,7 @@ export const UserProfile = ({ userId }: { userId: number }) => {
         <CardTitle>User Profile</CardTitle>
       </CardHeader>
       <CardContent>
-        <div>User ID: {userId}</div>
+        <div className="text-sm">User ID: {userId}</div>
       </CardContent>
     </Card>
   );
