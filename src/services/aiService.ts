@@ -9,7 +9,7 @@ const openrouter = new OpenRouter({
 export async function generateResponse(prompt: string): Promise<string> {
   try {
     const response = await openrouter.chat.completions.create({
-      model: "anthropic/claude-3-haiku",
+      model: "deepseek/deepseek-r1:free",
       messages: [{ role: "user", content: prompt }],
       temperature: 0.7,
       max_tokens: 1000,
