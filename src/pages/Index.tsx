@@ -5,6 +5,7 @@ import { ExecutiveCard } from "@/components/ExecutiveCard";
 import { UserProfile } from "@/components/UserProfile";
 import { ActivityFeed } from "@/components/ActivityFeed";
 import { ResearchInsights } from "@/components/ResearchInsights";
+import { SavedExecutives } from "@/components/SavedExecutives";
 
 interface Executive {
   id: number;
