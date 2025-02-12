@@ -1,0 +1,22 @@
+Navbar is not defined
+[vite] hot updated: /src/App.tsx
+[vite] hot updated: /src/index.css
+404 Error: User attempted to access non-existent route: /saved
+[vite] hot updated: /src/components/SavedExecutives.tsx
+[vite] hot updated: /src/index.css
+[vite] hot updated: /src/App.tsx
+[vite] hot updated: /src/index.css
+onSearch is not a function
+onSearch is not a function
+onSearch is not a function
+onSearch is not a function
+at handleSubmit (https://349c6b05-902d-4933-9479-64b29eb85a68-00-3aa9hjqlxep7w.picard.replit.dev/src/components/SearchBar.tsx:18:9)
+at HTMLUnknownElement.callCallback2 (https://349c6b05-902d-4933-9479-64b29eb85a68-00-3aa9hjqlxep7w.picard.replit.dev/node_modules/.vite/deps/chunk-R6S4VRB5.js?v=471ef5da:3674:22)
+at Object.invokeGuardedCallbackDev (https://349c6b05-902d-4933-9479-64b29eb85a68-00-3aa9hjqlxep7w.picard.replit.dev/node_modules/.vite/deps/chunk-R6S4VRB5.js?v=471ef5da:3699:24)
+at invokeGuardedCallback (https://349c6b05-902d-4933-9479-64b29eb85a68-00-3aa9hjqlxep7w.picard.replit.dev/node_modules/.vite/deps/chunk-R6S4VRB5.js?v=471ef5da:3733:39)
+at invokeGuardedCallbackAndCatchFirstError (https://349c6b05-902d-4933-9479-64b29eb85a68-00-3aa9hjqlxep7w.picard.replit.dev/node_modules/.vite/deps/chunk-R6S4VRB5.js?v=471ef5da:3736:33)
+at executeDispatch (https://349c6b05-902d-4933-9479-64b29eb85a68-00-3aa9hjqlxep7w.picard.replit.dev/node_modules/.vite/deps/chunk-R6S4VRB5.js?v=471ef5da:7014:11)
+at processDispatchQueueItemsInOrder (https://349c6b05-902d-4933-9479-64b29eb85a68-00-3aa9hjqlxep7w.picard.replit.dev/node_modules/.vite/deps/chunk-R6S4VRB5.js?v=471ef5da:7034:15)
+at processDispatchQueue (https://349c6b05-902d-4933-9479-64b29eb85a68-00-3aa9hjqlxep7w.picard.replit.dev/node_modules/.vite/deps/chunk-R6S4VRB5.js?v=471ef5da:7043:13)
+at dispatchEventsForPlugins (https://349c6b05-902d-4933-9479-64b29eb85a68-00-3aa9hjqlxep7w.picard.replit.dev/node_modules/.vite/deps/chunk-R6S4VRB5.js?v=471ef5da:7051:11)
+at https://349c6b05-902d-4933-9479-64b29eb85a68-00-3aa9hjqlxep7w.picard.replit.dev/node_modules/.vite/deps/chunk-R6S4VRB5.js?v=471ef5da:7174:20
