@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,119 +20,38 @@ interface SavedExecutivesProps {
   onUpdate: (executive: SavedExecutive) => void;
 }
 
-export const SavedExecutives = ({ executives, onRemove, onUpdate }: SavedExecutivesProps) => {
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [editForm, setEditForm] = useState<SavedExecutive | null>(null);
-
-  const handleEdit = (executive: SavedExecutive) => {
-    setEditingId(executive.id);
-    setEditForm(executive);
-  };
-
-  const handleSave = () => {
-    if (editForm) {
-      onUpdate(editForm);
-      setEditingId(null);
-      setEditForm(null);
-    }
-  };
-
-  const handleCancel = () => {
-    setEditingId(null);
-    setEditForm(null);
-  };
+//The original component is replaced entirely
+export const SavedExecutives = () => {
+  const savedExecutives = []; // TODO: Implement state management
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Saved Executives ({executives.length})</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Position</TableHead>
-              <TableHead>Company</TableHead>
-              <TableHead>Notes</TableHead>
-              <TableHead className="w-24">Actions</TableHead>
+    <div className="container mx-auto py-6">
+      <h1 className="text-2xl font-bold mb-6">Saved Executives</h1>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+            <TableHead>Position</TableHead>
+            <TableHead>Company</TableHead>
+            <TableHead>Notes</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {savedExecutives.map((executive) => (
+            <TableRow key={executive.id}>
+              <TableCell>{executive.name}</TableCell>
+              <TableCell>{executive.position}</TableCell>
+              <TableCell>{executive.company}</TableCell>
+              <TableCell>{executive.notes}</TableCell>
+              <TableCell>
+                <Button variant="ghost" size="sm">Edit</Button>
+                <Button variant="destructive" size="sm">Remove</Button>
+              </TableCell>
             </TableRow>
-          </TableHeader>
-          <TableBody>
-            {executives.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center text-gray-500">
-                  No saved executives yet
-                </TableCell>
-              </TableRow>
-            ) : (
-              executives.map((exec) => (
-                <TableRow key={exec.id}>
-                  {editingId === exec.id ? (
-                    <>
-                      <TableCell>
-                        <Input
-                          value={editForm?.name}
-                          onChange={(e) => setEditForm({ ...editForm!, name: e.target.value })}
-                          className="w-full"
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Input
-                          value={editForm?.position}
-                          onChange={(e) => setEditForm({ ...editForm!, position: e.target.value })}
-                          className="w-full"
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Input
-                          value={editForm?.company}
-                          onChange={(e) => setEditForm({ ...editForm!, company: e.target.value })}
-                          className="w-full"
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Textarea
-                          value={editForm?.notes || ""}
-                          onChange={(e) => setEditForm({ ...editForm!, notes: e.target.value })}
-                          className="w-full"
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex gap-2">
-                          <Button size="sm" onClick={handleSave}>
-                            <Save className="h-4 w-4" />
-                          </Button>
-                          <Button size="sm" variant="outline" onClick={handleCancel}>
-                            <XCircle className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </>
-                  ) : (
-                    <>
-                      <TableCell>{exec.name}</TableCell>
-                      <TableCell>{exec.position}</TableCell>
-                      <TableCell>{exec.company}</TableCell>
-                      <TableCell>{exec.notes}</TableCell>
-                      <TableCell>
-                        <div className="flex gap-2">
-                          <Button variant="ghost" size="sm" onClick={() => handleEdit(exec)}>
-                            <Edit2 className="h-4 w-4" />
-                          </Button>
-                          <Button variant="ghost" size="sm" onClick={() => onRemove(exec.id)}>
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </>
-                  )}
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 };
