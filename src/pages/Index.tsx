@@ -34,6 +34,12 @@ export default function Index() {
     setSavedExecutives(prev => prev.filter(exec => exec.id !== id));
   };
 
+  const handleUpdateExecutive = (updatedExecutive: Executive) => {
+    setSavedExecutives(prev => 
+      prev.map(exec => exec.id === updatedExecutive.id ? updatedExecutive : exec)
+    );
+  };
+
   useEffect(() => {
     fetch('/api/executives', {
       credentials: 'include'
@@ -83,6 +89,7 @@ export default function Index() {
           <SavedExecutives 
             executives={savedExecutives}
             onRemove={handleRemoveExecutive}
+            onUpdate={handleUpdateExecutive}
           />
           <ActivityFeed />
           <ResearchInsights 
