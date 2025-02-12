@@ -4,10 +4,24 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
+const sqlite3 = require('sqlite3').verbose();
 
 const app = express();
 const port = 3000;
 const JWT_SECRET = 'your-secret-key';
+
+// Initialize SQLite database
+const db = new sqlite3.Database('users.db');
+
+// Create users table
+db.run(`
+  CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY,
+    email TEXT UNIQUE,
+    name TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )
+`);
 
 app.use(cors({
   origin: 'http://0.0.0.0:5173',
@@ -33,19 +47,33 @@ const auth = (req, res, next) => {
 
 app.post('/api/auth/signin', (req, res) => {
   const { email } = req.body;
-  const allowedEmail = 'kgwanti@nexdatasolutions.co';
+  const name = email.split('@')[0];
 
-  if (email !== allowedEmail) {
-    return res.status(401).json({ message: 'Unauthorized email address' });
-  }
+  db.run('INSERT OR IGNORE INTO users (email, name) VALUES (?, ?)', [email, name], (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: 'Error creating user' });
+    }
 
-  const token = jwt.sign({ id: 1, name: 'Kgwanti', email }, JWT_SECRET);
-  res.cookie('token', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax'
+    db.get('SELECT * FROM users WHERE email = ?', [email], (err, user) => {
+      if (err) {
+        return res.status(500).json({ message: 'Error fetching user' });
+      }
+
+      const token = jwt.sign({ id: user.id, name: user.name, email }, JWT_SECRET);
+      res.cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax'
+      });
+      res.json({ message: 'Signed in successfully' });
+    });
   });
-  res.json({ message: 'Signed in successfully' });
+});
+
+app.post('/api/auth/signout', (req, res) => {
+  res.clearCookie('token');
+  res.json({ message: 'Signed out successfully' });
 });
 
 // Protected API endpoint

@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
+  const [isSignedIn, setIsSignedIn] = useState(false);
 
   const handleSignIn = async () => {
     try {
@@ -44,12 +45,33 @@ const SignIn = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
           {error && <div className="text-red-500 text-sm">{error}</div>}
-          <Button
-            className="w-full"
-            onClick={handleSignIn}
-          >
-            Sign In
-          </Button>
+          {!isSignedIn ? (
+            <Button
+              className="w-full"
+              onClick={handleSignIn}
+            >
+              Sign In
+            </Button>
+          ) : (
+            <Button
+              className="w-full"
+              variant="destructive"
+              onClick={async () => {
+                try {
+                  await fetch('/api/auth/signout', {
+                    method: 'POST',
+                    credentials: 'include'
+                  });
+                  setIsSignedIn(false);
+                  window.location.href = '/signin';
+                } catch (err) {
+                  setError("Failed to sign out");
+                }
+              }}
+            >
+              Sign Out
+            </Button>
+          )}
         </CardContent>
       </Card>
     </div>
