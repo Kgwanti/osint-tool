@@ -2,26 +2,30 @@
 import OpenRouter from "openrouter";
 
 const openrouter = new OpenRouter({
-  apiKey: process.env.OPENROUTER_API_KEY || "",
+  apiKey: "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",
   baseURL: "https://openrouter.ai/api/v1",
 });
 
-export async function generateResponse(prompt: string) {
+export async function generateResponse(prompt: string): Promise<string> {
   try {
     const response = await openrouter.chat.completions.create({
-      model: "deepseek/deepseek-r1:free",
+      model: "deepseek-ai/deepseek-coder-33b-instruct",
       messages: [{ role: "user", content: prompt }],
       temperature: 0.7,
       max_tokens: 1000,
       headers: {
         "HTTP-Referer": "https://replit.com",
-        "X-Title": "Executive Research Assistant"
+        "X-Title": "AI Research Assistant"
       }
     });
 
-    return response.choices[0]?.message?.content || "I apologize, I couldn't generate a response.";
+    if (!response.choices?.[0]?.message?.content) {
+      throw new Error("No response received from AI");
+    }
+
+    return response.choices[0].message.content;
   } catch (error) {
     console.error("AI Service Error:", error);
-    throw new Error("Failed to generate response. Please try again.");
+    return "I apologize, but I encountered an error processing your request. Please try again.";
   }
 }
