@@ -1,6 +1,7 @@
 
-import { createModel } from '../../research_lib/lib/deep-research/ai/providers';
+import { FirecrawlApp } from '@mendable/firecrawl-js';
 import { deepResearch } from '../../research_lib/lib/deep-research/deep-research';
+import { createModel } from '../../research_lib/lib/deep-research/ai/providers';
 
 export interface ResearchInsight {
   topic: string;
