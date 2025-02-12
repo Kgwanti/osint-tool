@@ -2,7 +2,10 @@
 import { ResearchEngine } from '../../research_lib/src/engine';
 import { InsightGenerator } from '../../research_lib/src/insights';
 
-const researchEngine = new ResearchEngine();
+const researchEngine = new ResearchEngine({
+  openaiKey: process.env.OPENAI_API_KEY,
+  firecrawlKey: process.env.FIRECRAWL_KEY
+});
 const insightGenerator = new InsightGenerator();
 
 export interface ResearchInsight {
