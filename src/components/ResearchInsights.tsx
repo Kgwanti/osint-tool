@@ -19,7 +19,7 @@ export const ResearchInsights = ({ executive, industry }: { executive?: string; 
     if (!executive && !industry) return;
     
     setLoading(true);
-    fetch(`http://0.0.0.0:3000/api/research/insights?executive=${executive}&industry=${industry}`, {
+    fetch(`/api/research/insights?executive=${executive}&industry=${industry}`, {
       credentials: 'include'
     })
       .then(res => res.json())

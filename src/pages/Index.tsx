@@ -20,7 +20,7 @@ export default function Index() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('http://0.0.0.0:3000/api/executives', {
+    fetch('/api/executives', {
       credentials: 'include'
     })
       .then(res => {
