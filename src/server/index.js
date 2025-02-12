@@ -49,6 +49,38 @@ app.post('/api/auth/signin', (req, res) => {
 });
 
 // Protected API endpoint
+// User profile endpoints
+app.get('/api/users/:id', auth, (req, res) => {
+  const users = {
+    1: { id: 1, name: 'Kgwanti', email: 'kgwanti@nexdatasolutions.co', role: 'Admin', image: '/placeholder.svg' }
+  };
+  const user = users[req.params.id];
+  if (!user) return res.status(404).json({ message: 'User not found' });
+  res.json(user);
+});
+
+app.get('/api/users/search', auth, (req, res) => {
+  const { query } = req.query;
+  const users = [
+    { id: 1, name: 'Kgwanti', email: 'kgwanti@nexdatasolutions.co', role: 'Admin', image: '/placeholder.svg' },
+    { id: 2, name: 'John Doe', email: 'john@nexdatasolutions.co', role: 'User', image: '/placeholder.svg' }
+  ];
+  
+  const filtered = users.filter(user => 
+    user.name.toLowerCase().includes(query.toLowerCase()) ||
+    user.email.toLowerCase().includes(query.toLowerCase())
+  );
+  res.json(filtered);
+});
+
+app.get('/api/activity', auth, (req, res) => {
+  const activities = [
+    { id: 1, userId: 1, type: 'profile_view', target: 'Executive Profile', timestamp: new Date().toISOString() },
+    { id: 2, userId: 1, type: 'search', target: 'Technology sector', timestamp: new Date().toISOString() }
+  ];
+  res.json(activities);
+});
+
 app.get('/api/executives', auth, (req, res) => {
   const executives = [
     {

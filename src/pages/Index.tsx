@@ -39,7 +39,8 @@ export default function Index() {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="space-y-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="lg:col-span-2 space-y-4">
         <SearchBar />
         <FilterBar />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -53,6 +54,11 @@ export default function Index() {
               No executives found. Try adjusting your search criteria.
             </div>
           )}
+      </div>
+        <div className="space-y-4">
+          <UserProfile userId={1} />
+          <ActivityFeed />
+        </div>
       </div>
     </div>
   );
