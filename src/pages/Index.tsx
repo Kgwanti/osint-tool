@@ -4,7 +4,9 @@ import { FilterBar } from "@/components/FilterBar";
 import { ExecutiveCard } from "@/components/ExecutiveCard";
 import { UserProfile } from "@/components/UserProfile";
 import { ActivityFeed } from "@/components/ActivityFeed";
-import { ResearchInsights } from "@/components/ResearchInsights"; // Added import
+import { ResearchInsights } from "../components/ResearchInsights";
+import { UserProfile } from "../components/UserProfile";  
+import { ActivityFeed } from "../components/ActivityFeed";
 
 interface Executive {
   id: number;
