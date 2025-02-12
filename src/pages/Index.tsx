@@ -1,39 +1,20 @@
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { SearchBar } from "@/components/SearchBar";
 import { useTheme } from "@/components/ThemeProvider";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, Sparkles } from "lucide-react";
 import { AnimatedBackground } from "@/components/AnimatedBackground";
 
+const OPENROUTER_API_KEY = process.env.NEXT_PUBLIC_OPENROUTER_API_KEY;
+
 const Index = () => {
-  const { theme, setTheme } = useTheme();
-
-  return (
-    <div className="min-h-screen">
-      <AnimatedBackground />
-      <Button
-        variant="outline"
-        size="icon"
-        className="fixed top-4 right-4"
-        onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-      >
-        {theme === "light" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
-      </Button>
-      <SearchBar />
-    </div>
-  );
-};
-
-export default Index;
-
-const OPENROUTER_API_KEY = process.env.NEXT_PUBLIC_OPENROUTER_API_KEY; // Added API key access
-
-export default function Index() {
   const [messages, setMessages] = useState<Array<{role: string, content: string}>>([]);
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
   const [level, setLevel] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const parallaxRef = useRef<HTMLDivElement>(null);
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -53,8 +34,6 @@ export default function Index() {
       setLevel(prev => prev + 1);
     }
   };
-  const [isLoading, setIsLoading] = useState(false);
-  const { theme, setTheme } = useTheme();
 
   const handleSearch = async (query: string) => {
     if (!query.trim()) return;
@@ -62,11 +41,11 @@ export default function Index() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/chat', { // Assumed endpoint.  May need adjustment.
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${OPENROUTER_API_KEY}` // Added API key authorization
+          'Authorization': `Bearer ${OPENROUTER_API_KEY}`
         },
         body: JSON.stringify({ message: query })
       });
@@ -77,7 +56,7 @@ export default function Index() {
         role: 'assistant', 
         content: "Sorry, I encountered an error processing your request." 
       }]);
-      console.error("Error fetching data:", error); // Added error logging
+      console.error("Error fetching data:", error);
     } finally {
       setIsLoading(false);
     }
@@ -142,4 +121,6 @@ export default function Index() {
       </div>
     </div>
   );
-}
+};
+
+export default Index;
