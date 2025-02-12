@@ -5,8 +5,19 @@ run = "npm run dev"
 channel = "stable-24_05"
 
 [deployment]
-run = ["sh", "-c", "npm run dev"]
+run = ["sh", "-c", "node src/server/index.js"]
 
 [[ports]]
 localPort = 8080
 externalPort = 80
+
+[workflows]
+runButton = "Start Server"
+
+[[workflows.workflow]]
+name = "Start Server"
+author = 39298038
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "node src/server/index.js"
