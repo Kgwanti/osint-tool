@@ -17,7 +17,22 @@ interface Executive {
 
 export default function Index() {
   const [executives, setExecutives] = useState<Executive[]>([]);
+  const [savedExecutives, setSavedExecutives] = useState<Executive[]>([]);
   const [error, setError] = useState<string | null>(null);
+
+  const handleSaveExecutive = (executive: Executive) => {
+    setSavedExecutives(prev => {
+      const exists = prev.some(exec => exec.id === executive.id);
+      if (exists) {
+        return prev.filter(exec => exec.id !== executive.id);
+      }
+      return [...prev, executive];
+    });
+  };
+
+  const handleRemoveExecutive = (id: number) => {
+    setSavedExecutives(prev => prev.filter(exec => exec.id !== id));
+  };
 
   useEffect(() => {
     fetch('/api/executives', {
@@ -48,7 +63,12 @@ export default function Index() {
         <FilterBar />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {executives.map((executive) => (
-            <ExecutiveCard key={executive.id} {...executive} />
+            <ExecutiveCard 
+              key={executive.id} 
+              {...executive} 
+              onSave={handleSaveExecutive}
+              isSaved={savedExecutives.some(saved => saved.id === executive.id)}
+            />
           ))}
         </div>
         {error && <div className="text-red-500 text-center">{error}</div>}
@@ -60,6 +80,10 @@ export default function Index() {
       </div>
         <div className="space-y-4">
           <UserProfile userId={1} />
+          <SavedExecutives 
+            executives={savedExecutives}
+            onRemove={handleRemoveExecutive}
+          />
           <ActivityFeed />
           <ResearchInsights 
             executive={executives[0]?.name}

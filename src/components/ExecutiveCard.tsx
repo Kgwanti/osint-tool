@@ -1,17 +1,19 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { LinkedinIcon, BriefcaseIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { LinkedinIcon, BookmarkIcon } from "lucide-react";
 
 interface ExecutiveCardProps {
+  id: number;
   name: string;
   position: string;
   company: string;
   industry: string;
   linkedin?: string;
+  onSave: (executive: Omit<ExecutiveCardProps, 'onSave'>) => void;
+  isSaved?: boolean;
 }
 
-export const ExecutiveCard = ({ name, position, company, industry, linkedin }: ExecutiveCardProps) => {
+export const ExecutiveCard = ({ id, name, position, company, industry, linkedin, onSave, isSaved }: ExecutiveCardProps) => {
   return (
     <Card className="w-full animate-fadeIn hover:shadow-lg transition-shadow duration-300">
       <CardHeader className="space-y-1">
@@ -29,16 +31,28 @@ export const ExecutiveCard = ({ name, position, company, industry, linkedin }: E
           )}
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex items-center space-x-2 text-gray-600">
-          <BriefcaseIcon className="h-4 w-4" />
-          <span className="text-sm">{position}</span>
-        </div>
-        <div className="space-y-2">
-          <p className="text-sm font-medium text-gray-900">{company}</p>
-          <Badge variant="secondary" className="text-xs">
-            {industry}
-          </Badge>
+      <CardContent className="flex flex-col gap-2">
+        <p className="text-sm text-gray-600">{position}</p>
+        <p className="text-sm text-gray-600">{company}</p>
+        <p className="text-sm text-gray-600">{industry}</p>
+        <div className="flex gap-2">
+          {linkedin && (
+            <Button variant="outline" size="sm" className="flex-1" asChild>
+              <a href={linkedin} target="_blank" rel="noopener noreferrer">
+                <LinkedinIcon className="w-4 h-4 mr-2" />
+                LinkedIn
+              </a>
+            </Button>
+          )}
+          <Button 
+            variant={isSaved ? "default" : "outline"} 
+            size="sm" 
+            className="flex-1"
+            onClick={() => onSave({ id, name, position, company, industry, linkedin })}
+          >
+            <BookmarkIcon className="w-4 h-4 mr-2" />
+            {isSaved ? 'Saved' : 'Save'}
+          </Button>
         </div>
       </CardContent>
     </Card>
