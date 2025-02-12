@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -17,7 +16,7 @@ export const ResearchInsights = ({ executive, industry }: { executive?: string; 
 
   useEffect(() => {
     if (!executive && !industry) return;
-    
+
     setLoading(true);
     fetch(`/api/research/insights?executive=${executive}&industry=${industry}`, {
       credentials: 'include'
