@@ -1,4 +1,3 @@
-
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
@@ -6,23 +5,27 @@ import { useState } from "react";
 import { generateInsights } from "@/services/researchService";
 
 interface SearchBarProps {
-  onResultsFound?: (results: any[]) => void;
+  onSearch?: (query: string) => void;
 }
 
-export const SearchBar = ({ onResultsFound }: SearchBarProps) => {
+const defaultProps = {
+  onSearch: (query: string) => console.log('Search:', query)
+};
+
+export const SearchBar = ({ onSearch = defaultProps.onSearch }: SearchBarProps) => {
   const [isSearching, setIsSearching] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSearching(true);
-    
+
     const formData = new FormData(e.currentTarget);
     const query = formData.get('search') as string;
-    
+
     try {
       const insights = await generateInsights(query, "all");
-      if (onResultsFound) {
-        onResultsFound(insights);
+      if (onSearch) {
+        onSearch(query);
       }
     } catch (error) {
       console.error("Search error:", error);
