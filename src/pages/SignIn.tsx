@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,7 +17,7 @@ export default function SignIn() {
         credentials: 'include',
         body: JSON.stringify({ email })
       });
-      
+
       if (response.ok) {
         window.location.href = '/';
       } else {
@@ -31,10 +30,10 @@ export default function SignIn() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <Card className="w-[350px]">
+    <div className="container mx-auto flex items-center justify-center min-h-screen"> {/* Adopted container styling */}
+      <Card className="w-[400px]"> {/* Adopted card width */}
         <CardHeader>
-          <CardTitle className="text-2xl text-center">Welcome Back, Kgwanti</CardTitle>
+          <CardTitle>Welcome Back, Kgwanti</CardTitle> {/* Kept original title */}
         </CardHeader>
         <CardContent className="space-y-4">
           <Input
@@ -44,7 +43,7 @@ export default function SignIn() {
             onChange={(e) => setEmail(e.target.value)}
           />
           {error && <div className="text-red-500 text-sm">{error}</div>}
-          <Button 
+          <Button
             className="w-full"
             onClick={handleSignIn}
           >
