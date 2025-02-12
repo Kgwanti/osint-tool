@@ -81,6 +81,31 @@ app.get('/api/activity', auth, (req, res) => {
   res.json(activities);
 });
 
+// Research insights endpoint
+app.get('/api/research/insights', auth, (req, res) => {
+  const { executive, industry } = req.query;
+  
+  // Simulated research insights - replace with actual data fetching logic
+  const insights = [
+    {
+      topic: `${industry || 'Industry'} Market Trends`,
+      summary: `Recent analysis shows significant growth in ${industry} sector, with emerging opportunities in digital transformation.`,
+      relevance: 95,
+      timestamp: new Date().toISOString(),
+      source: "Market Research Report 2024"
+    },
+    {
+      topic: "Strategic Developments",
+      summary: `Key strategic moves in ${executive}'s organization indicate focus on sustainability and innovation.`,
+      relevance: 88,
+      timestamp: new Date().toISOString(),
+      source: "Industry Analytics"
+    }
+  ];
+  
+  res.json(insights);
+});
+
 app.get('/api/executives', auth, (req, res) => {
   const executives = [
     {

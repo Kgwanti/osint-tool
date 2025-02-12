@@ -58,6 +58,10 @@ export default function Index() {
         <div className="space-y-4">
           <UserProfile userId={1} />
           <ActivityFeed />
+          <ResearchInsights 
+            executive={executives[0]?.name}
+            industry={executives[0]?.industry}
+          />
         </div>
       </div>
     </div>
