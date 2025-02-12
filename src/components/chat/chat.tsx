@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { generateResponse } from "@/services/aiService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { CosmicLoader } from "@/components/ui/cosmic-loader";
 
 export function Chat() {
   const [messages, setMessages] = useState<Array<{role: string, content: string}>>([]);
@@ -30,6 +31,11 @@ export function Chat() {
   return (
     <div className="flex flex-col h-full">
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {loading && (
+          <div className="flex justify-center">
+            <CosmicLoader />
+          </div>
+        )}
         {messages.map((message, i) => (
           <div
             key={i}
