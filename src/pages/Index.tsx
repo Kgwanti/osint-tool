@@ -88,7 +88,10 @@ export default function Index() {
       <Navbar /> {/* Added Navbar component */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="lg:col-span-2 space-y-4">
-          <SearchBar onSearch={query => setSearchQuery(query)} /> {/* Fixed onSearch prop */}
+          <SearchBar onSearch={(query: string) => {
+            setSearchQuery(query);
+            // Add your search logic here
+          }} /> {/* Fixed onSearch prop */}
           <FilterBar />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {searchResults.map((executive) => (

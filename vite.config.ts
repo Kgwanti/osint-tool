@@ -15,7 +15,7 @@ export default defineConfig(({ mode }) => ({
     componentTagger(),
   ].filter(Boolean),
   define: {
-    'process.env': process.env
+    'process.env': {}
   },
   resolve: {
     alias: {
