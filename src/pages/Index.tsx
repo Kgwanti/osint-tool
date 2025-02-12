@@ -40,7 +40,7 @@ export default function Index() {
       
       <div className="container max-w-4xl mx-auto p-4 flex flex-col min-h-screen relative">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-4xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
+          <h1 className="text-4xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70 animate-float">
             AI Research Assistant
           </h1>
           <Button
@@ -57,7 +57,7 @@ export default function Index() {
           {messages.map((message, index) => (
             <div
               key={index}
-              className={`chat-message p-4 rounded-2xl max-w-[80%] ${
+              className={`chat-message p-4 rounded-2xl max-w-[80%] hover-scale messages-transition ${
                 message.role === 'user'
                   ? 'bg-primary/5 text-primary ml-auto'
                   : 'bg-muted/50 mr-auto'
