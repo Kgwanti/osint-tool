@@ -9,23 +9,27 @@ const openrouter = new OpenRouter({
 export async function generateResponse(prompt: string): Promise<string> {
   try {
     const response = await openrouter.chat.completions.create({
-      model: "deepseek-ai/deepseek-coder-33b-instruct",
+      model: "anthropic/claude-3-haiku",
       messages: [{ role: "user", content: prompt }],
       temperature: 0.7,
       max_tokens: 1000,
       headers: {
-        "HTTP-Referer": "https://replit.com",
-        "X-Title": "AI Research Assistant"
+        "HTTP-Referer": "http://localhost:3000",
+        "X-Title": "AI Research Assistant",
+        "Content-Type": "application/json"
       }
     });
 
-    if (!response.choices?.[0]?.message?.content) {
-      throw new Error("No response received from AI");
+    if (!response?.choices?.[0]?.message?.content) {
+      throw new Error("Invalid response format from AI service");
     }
 
     return response.choices[0].message.content;
-  } catch (error) {
-    console.error("AI Service Error:", error);
-    return "I apologize, but I encountered an error processing your request. Please try again.";
+  } catch (error: any) {
+    console.error("AI Service Error:", error?.response?.data || error.message);
+    if (error?.response?.status === 401) {
+      return "Authentication error. Please check your API key.";
+    }
+    return "I apologize, but I encountered an error. Please try again.";
   }
 }
