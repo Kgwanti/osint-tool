@@ -20,6 +20,9 @@ export default function Index() {
   const [executives, setExecutives] = useState<Executive[]>([]);
   const [savedExecutives, setSavedExecutives] = useState<Executive[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<Executive[]>([]);
+
 
   const handleSaveExecutive = (executive: Executive) => {
     setSavedExecutives(prev => {
@@ -58,33 +61,49 @@ export default function Index() {
         }
         return res.json();
       })
-      .then(data => setExecutives(data))
+      .then(data => {
+        setExecutives(data);
+        setSearchResults(data); // Initialize search results with all executives
+      })
       .catch(err => setError(err.message));
   }, []);
+
+  useEffect(() => {
+    const filteredResults = executives.filter(executive => {
+      const searchTermLower = searchQuery.toLowerCase();
+      return (
+        executive.name.toLowerCase().includes(searchTermLower) ||
+        executive.position.toLowerCase().includes(searchTermLower) ||
+        executive.company.toLowerCase().includes(searchTermLower) ||
+        executive.industry.toLowerCase().includes(searchTermLower)
+      );
+    });
+    setSearchResults(filteredResults);
+  }, [searchQuery, executives]);
 
   return (
     <div className="container mx-auto p-4">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="lg:col-span-2 space-y-4">
-        <SearchBar />
-        <FilterBar />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {executives.map((executive) => (
-            <ExecutiveCard 
-              key={executive.id} 
-              {...executive} 
-              onSave={handleSaveExecutive}
-              isSaved={savedExecutives.some(saved => saved.id === executive.id)}
-            />
-          ))}
+          <SearchBar onSearch={(query) => setSearchQuery(query)} />
+          <FilterBar />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {searchResults.map((executive) => (
+              <ExecutiveCard 
+                key={executive.id} 
+                {...executive} 
+                onSave={handleSaveExecutive}
+                isSaved={savedExecutives.some(saved => saved.id === executive.id)}
+              />
+            ))}
+          </div>
+          {error && <div className="text-red-500 text-center">{error}</div>}
+          {searchResults.length === 0 && !error && (
+              <div className="text-center text-gray-500 py-12">
+                No executives found. Try adjusting your search criteria.
+              </div>
+            )}
         </div>
-        {error && <div className="text-red-500 text-center">{error}</div>}
-        {executives.length === 0 && !error && (
-            <div className="text-center text-gray-500 py-12">
-              No executives found. Try adjusting your search criteria.
-            </div>
-          )}
-      </div>
         <div className="space-y-4">
           <UserProfile userId={1} />
           <SavedExecutives 
