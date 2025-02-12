@@ -1,9 +1,30 @@
-import React, { useRef, useState, useEffect } from "react";
+import React from "react";
 import { SearchBar } from "@/components/SearchBar";
 import { useTheme } from "@/components/ThemeProvider";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun, Sparkles } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import { AnimatedBackground } from "@/components/AnimatedBackground";
+
+const Index = () => {
+  const { theme, setTheme } = useTheme();
+
+  return (
+    <div className="min-h-screen">
+      <AnimatedBackground />
+      <Button
+        variant="outline"
+        size="icon"
+        className="fixed top-4 right-4"
+        onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+      >
+        {theme === "light" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+      </Button>
+      <SearchBar />
+    </div>
+  );
+};
+
+export default Index;
 
 const OPENROUTER_API_KEY = process.env.NEXT_PUBLIC_OPENROUTER_API_KEY; // Added API key access
 

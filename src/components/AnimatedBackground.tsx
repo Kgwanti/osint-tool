@@ -1,8 +1,10 @@
 
 import { useEffect, useRef } from 'react';
+import { useTheme } from '@/components/ThemeProvider';
 
 export const AnimatedBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { theme } = useTheme();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -13,72 +15,119 @@ export const AnimatedBackground = () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const particles: Particle[] = [];
-    const particleCount = 50;
+    const stars: Star[] = [];
+    const constellations: Constellation[] = [];
+    const starCount = 200;
 
-    class Particle {
+    class Star {
       x: number;
       y: number;
       size: number;
-      speedX: number;
-      speedY: number;
-      hue: number;
+      brightness: number;
+      twinkleSpeed: number;
 
       constructor() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 15 + 1;
-        this.speedX = Math.random() * 3 - 1.5;
-        this.speedY = Math.random() * 3 - 1.5;
-        this.hue = Math.random() * 360;
+        this.size = Math.random() * 2 + 0.5;
+        this.brightness = Math.random();
+        this.twinkleSpeed = 0.01 + Math.random() * 0.02;
       }
 
       update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        this.hue += 0.5;
-
-        if (this.size > 0.2) this.size -= 0.1;
-        if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
-        if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+        this.brightness += this.twinkleSpeed;
+        if (this.brightness > 1 || this.brightness < 0) {
+          this.twinkleSpeed = -this.twinkleSpeed;
+        }
       }
 
       draw() {
-        ctx!.fillStyle = `hsla(${this.hue}, 100%, 50%, 0.8)`;
+        ctx!.fillStyle = `rgba(255, 255, 255, ${this.brightness})`;
         ctx!.beginPath();
         ctx!.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx!.fill();
       }
     }
 
+    class Constellation {
+      stars: { x: number; y: number }[];
+      alpha: number;
+      fadeDirection: number;
+
+      constructor() {
+        this.stars = [];
+        const numPoints = Math.floor(Math.random() * 5) + 3;
+        for (let i = 0; i < numPoints; i++) {
+          this.stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height
+          });
+        }
+        this.alpha = Math.random() * 0.5;
+        this.fadeDirection = Math.random() > 0.5 ? 0.001 : -0.001;
+      }
+
+      update() {
+        this.alpha += this.fadeDirection;
+        if (this.alpha > 0.5 || this.alpha < 0) {
+          this.fadeDirection = -this.fadeDirection;
+        }
+      }
+
+      draw() {
+        ctx!.strokeStyle = `rgba(255, 255, 255, ${this.alpha * 0.5})`;
+        ctx!.beginPath();
+        ctx!.moveTo(this.stars[0].x, this.stars[0].y);
+        for (let i = 1; i < this.stars.length; i++) {
+          ctx!.lineTo(this.stars[i].x, this.stars[i].y);
+        }
+        ctx!.closePath();
+        ctx!.stroke();
+      }
+    }
+
     function init() {
-      for (let i = 0; i < particleCount; i++) {
-        particles.push(new Particle());
+      for (let i = 0; i < starCount; i++) {
+        stars.push(new Star());
+      }
+      for (let i = 0; i < 5; i++) {
+        constellations.push(new Constellation());
       }
     }
 
     function animate() {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.02)';
+      ctx.fillStyle = theme === 'dark' ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      particles.forEach((particle, index) => {
-        particle.update();
-        particle.draw();
-        if (particle.size <= 0.2) {
-          particles.splice(index, 1);
-          particles.push(new Particle());
-        }
-      });
+      if (theme === 'dark') {
+        stars.forEach(star => {
+          star.update();
+          star.draw();
+        });
+        
+        constellations.forEach(constellation => {
+          constellation.update();
+          constellation.draw();
+        });
+      }
+      
       requestAnimationFrame(animate);
     }
 
     init();
     animate();
 
+    const handleResize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    window.addEventListener('resize', handleResize);
     return () => {
+      window.removeEventListener('resize', handleResize);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     };
-  }, []);
+  }, [theme]);
 
   return (
     <canvas
