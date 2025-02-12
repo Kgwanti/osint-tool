@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
 import { SearchBar } from "@/components/SearchBar";
-import React, { useRef, useState } from 'react';
 import { useTheme } from "@/components/ThemeProvider";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun, Sparkles } from "lucide-react";
