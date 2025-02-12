@@ -17,7 +17,16 @@ export default function Index() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('http://0.0.0.0:3000/api/executives')
+    fetch('http://0.0.0.0:3000/api/executives', {
+      credentials: 'include'
+    })
+      .then(res => {
+        if (res.status === 401) {
+          window.location.href = '/signin';
+          throw new Error('Unauthorized');
+        }
+        return res;
+      })
       .then(res => {
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
