@@ -63,8 +63,29 @@
 }
 
 .chat-message {
-  @apply transition-all duration-300 ease-in-out;
-  animation: slideIn 0.3s ease-out;
+  @apply transition-all duration-300 ease-in-out backdrop-blur-sm;
+  animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(var(--primary), 0.1);
+}
+
+.chat-input {
+  @apply transition-all duration-300 ease-in-out backdrop-blur-md;
+  border: 1px solid rgba(var(--primary), 0.1);
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.03);
+}
+
+.organic-shape {
+  position: fixed;
+  z-index: -1;
+  filter: blur(90px);
+  opacity: 0.4;
+  mix-blend-mode: plus-lighter;
+  animation: morphShape 25s ease-in-out infinite;
+  background: linear-gradient(
+    45deg,
+    rgba(var(--primary), 0.2),
+    rgba(var(--primary), 0.1)
+  );
 }
 
 @keyframes slideIn {

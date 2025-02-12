@@ -3,7 +3,7 @@ import { useState } from "react";
 import { SearchBar } from "@/components/SearchBar";
 import { useTheme } from "@/components/ThemeProvider";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, Sparkles } from "lucide-react";
 
 export default function Index() {
   const [messages, setMessages] = useState<Array<{role: string, content: string}>>([]);
@@ -35,41 +35,46 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <div className="organic-shape bg-primary/20 w-72 h-72 top-0 right-0" />
-      <div className="organic-shape bg-primary/20 w-96 h-96 bottom-0 left-0" />
+      <div className="organic-shape w-96 h-96 top-0 right-0" />
+      <div className="organic-shape w-[30rem] h-[30rem] bottom-0 left-0" />
       
-      <div className="container max-w-4xl mx-auto p-4 flex flex-col min-h-screen">
-        <div className="flex justify-end mb-4">
+      <div className="container max-w-4xl mx-auto p-4 flex flex-col min-h-screen relative">
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-4xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
+            AI Research Assistant
+          </h1>
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+            className="rounded-full"
           >
             {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
           </Button>
         </div>
 
-        <div className="flex-1 overflow-y-auto space-y-4 mb-4">
+        <div className="flex-1 overflow-y-auto space-y-4 mb-4 scroll-smooth">
           {messages.map((message, index) => (
             <div
               key={index}
-              className={`chat-message p-4 rounded-lg max-w-[80%] ${
+              className={`chat-message p-4 rounded-2xl max-w-[80%] ${
                 message.role === 'user'
-                  ? 'bg-primary text-primary-foreground ml-auto'
-                  : 'bg-muted mr-auto'
+                  ? 'bg-primary/5 text-primary ml-auto'
+                  : 'bg-muted/50 mr-auto'
               }`}
             >
               {message.content}
             </div>
           ))}
           {isLoading && (
-            <div className="chat-message bg-muted p-4 rounded-lg max-w-[80%] mr-auto">
+            <div className="chat-message bg-muted/50 p-4 rounded-2xl max-w-[80%] mr-auto flex items-center gap-2">
+              <Sparkles className="h-4 w-4 animate-pulse" />
               Thinking...
             </div>
           )}
         </div>
 
-        <div className="sticky bottom-0 bg-background/80 backdrop-blur-sm p-4 rounded-lg">
+        <div className="sticky bottom-0 bg-background/50 backdrop-blur-xl p-4 rounded-2xl">
           <SearchBar onSearch={handleSearch} placeholder="Ask me anything..." />
         </div>
       </div>
