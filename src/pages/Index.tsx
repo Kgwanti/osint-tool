@@ -7,6 +7,29 @@ import { Moon, Sun, Sparkles } from "lucide-react";
 
 export default function Index() {
   const [messages, setMessages] = useState<Array<{role: string, content: string}>>([]);
+  const [score, setScore] = useState(0);
+  const [streak, setStreak] = useState(0);
+  const [level, setLevel] = useState(1);
+  const parallaxRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!parallaxRef.current) return;
+      const scrolled = window.scrollY;
+      parallaxRef.current.style.transform = `translateY(${scrolled * 0.5}px)`;
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const handleInteraction = () => {
+    setScore(prev => prev + 10 * streak);
+    setStreak(prev => prev + 1);
+    if (score > level * 1000) {
+      setLevel(prev => prev + 1);
+    }
+  };
   const [isLoading, setIsLoading] = useState(false);
   const { theme, setTheme } = useTheme();
 
@@ -38,7 +61,19 @@ export default function Index() {
       <div className="organic-shape w-96 h-96 top-0 right-0" />
       <div className="organic-shape w-[30rem] h-[30rem] bottom-0 left-0" />
       
+      <AnimatedBackground />
       <div className="container max-w-4xl mx-auto p-4 flex flex-col min-h-screen relative">
+        <div className="fixed top-4 right-4 flex gap-4 z-50">
+          <div className="bg-primary/10 backdrop-blur-lg rounded-xl p-3 animate-glow">
+            <span className="shimmer-text">Score: {score}</span>
+          </div>
+          <div className="bg-primary/10 backdrop-blur-lg rounded-xl p-3 animate-tilt-bounce">
+            <span className="shimmer-text">Level {level}</span>
+          </div>
+          <div className="bg-primary/10 backdrop-blur-lg rounded-xl p-3">
+            <span className="shimmer-text">Streak: {streak}🔥</span>
+          </div>
+        </div>
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-4xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70 animate-float">
             AI Research Assistant
@@ -57,7 +92,7 @@ export default function Index() {
           {messages.map((message, index) => (
             <div
               key={index}
-              className={`chat-message p-4 rounded-2xl max-w-[80%] hover-scale messages-transition ${
+              className={`chat-message p-4 rounded-2xl max-w-[80%] hover-scale messages-transition floating-element parallax-scroll ${
                 message.role === 'user'
                   ? 'bg-primary/5 text-primary ml-auto'
                   : 'bg-muted/50 mr-auto'

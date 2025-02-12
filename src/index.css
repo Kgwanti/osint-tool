@@ -134,3 +134,52 @@
 .messages-transition {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+@keyframes tiltBounce {
+  0%, 100% { transform: perspective(1000px) rotateX(0deg) translateY(0); }
+  25% { transform: perspective(1000px) rotateX(10deg) translateY(-10px); }
+  75% { transform: perspective(1000px) rotateX(-10deg) translateY(5px); }
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(var(--primary), 0.3); }
+  50% { box-shadow: 0 0 40px rgba(var(--primary), 0.6); }
+}
+
+@keyframes textShimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.animate-tilt-bounce {
+  animation: tiltBounce 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-glow {
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+.shimmer-text {
+  background: linear-gradient(
+    90deg,
+    var(--primary) 0%,
+    rgba(var(--primary), 0.5) 50%,
+    var(--primary) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: textShimmer 3s linear infinite;
+}
+
+.parallax-scroll {
+  transform: translateZ(0);
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
+}
+
+.floating-element {
+  animation: float 6s ease-in-out infinite;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
