@@ -32,8 +32,14 @@ const auth = (req, res, next) => {
 };
 
 app.post('/api/auth/signin', (req, res) => {
-  // In a real app, validate credentials here
-  const token = jwt.sign({ id: 1, name: 'Demo User' }, JWT_SECRET);
+  const { email } = req.body;
+  const allowedEmail = 'kgwanti@nexdatasolutions.co';
+
+  if (email !== allowedEmail) {
+    return res.status(401).json({ message: 'Unauthorized email address' });
+  }
+
+  const token = jwt.sign({ id: 1, name: 'Kgwanti', email }, JWT_SECRET);
   res.cookie('token', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
