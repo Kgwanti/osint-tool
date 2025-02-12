@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-import { SignIn } from "@/pages/SignIn"; // Added import for SignIn component
+import SignIn from "@/pages/SignIn";
 
 const queryClient = new QueryClient();
 
