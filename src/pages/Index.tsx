@@ -1,8 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
 import { SearchBar } from "@/components/SearchBar";
+import React, { useRef, useState } from 'react';
 import { useTheme } from "@/components/ThemeProvider";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun, Sparkles } from "lucide-react";
+import { AnimatedBackground } from "@/components/AnimatedBackground";
 
 const OPENROUTER_API_KEY = process.env.NEXT_PUBLIC_OPENROUTER_API_KEY; // Added API key access
 
