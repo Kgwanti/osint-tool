@@ -4,6 +4,8 @@ import { useTheme } from "@/components/ThemeProvider";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun, Sparkles } from "lucide-react";
 
+const OPENROUTER_API_KEY = process.env.NEXT_PUBLIC_OPENROUTER_API_KEY; // Added API key access
+
 export default function Index() {
   const [messages, setMessages] = useState<Array<{role: string, content: string}>>([]);
   const [score, setScore] = useState(0);
@@ -38,9 +40,12 @@ export default function Index() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/chat', {
+      const response = await fetch('/api/chat', { // Assumed endpoint.  May need adjustment.
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${OPENROUTER_API_KEY}` // Added API key authorization
+        },
         body: JSON.stringify({ message: query })
       });
       const data = await response.json();
@@ -50,6 +55,7 @@ export default function Index() {
         role: 'assistant', 
         content: "Sorry, I encountered an error processing your request." 
       }]);
+      console.error("Error fetching data:", error); // Added error logging
     } finally {
       setIsLoading(false);
     }
