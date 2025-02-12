@@ -1,128 +1,59 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { SearchBar } from "@/components/SearchBar";
-import { FilterBar } from "@/components/FilterBar";
-import { ExecutiveCard } from "@/components/ExecutiveCard";
-import { UserProfile } from "@/components/UserProfile";
-import { ActivityFeed } from "@/components/ActivityFeed";
-import { ResearchInsights } from "@/components/ResearchInsights";
-import { SavedExecutives } from "@/components/SavedExecutives";
-import { Navbar } from "@/components/Navbar"; // Added import for Navbar
-
-
-interface Executive {
-  id: number;
-  name: string;
-  position: string;
-  company: string;
-  industry: string;
-  linkedin?: string;
-}
 
 export default function Index() {
-  const [executives, setExecutives] = useState<Executive[]>([]);
-  const [savedExecutives, setSavedExecutives] = useState<Executive[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<Executive[]>([]);
+  const [messages, setMessages] = useState<Array<{role: string, content: string}>>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
+  const handleSearch = async (query: string) => {
+    if (!query.trim()) return;
 
-  const handleSaveExecutive = (executive: Executive) => {
-    setSavedExecutives(prev => {
-      const exists = prev.some(exec => exec.id === executive.id);
-      if (exists) {
-        return prev.filter(exec => exec.id !== executive.id);
-      }
-      return [...prev, executive];
-    });
+    // Add user message
+    setMessages(prev => [...prev, { role: 'user', content: query }]);
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/research/insights', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({ query })
+      });
+
+      const data = await response.json();
+      setMessages(prev => [...prev, { role: 'assistant', content: data.summary || "I couldn't find relevant information." }]);
+    } catch (error) {
+      setMessages(prev => [...prev, { role: 'assistant', content: "Sorry, I encountered an error processing your request." }]);
+    } finally {
+      setIsLoading(false);
+    }
   };
-
-  const handleRemoveExecutive = (id: number) => {
-    setSavedExecutives(prev => prev.filter(exec => exec.id !== id));
-  };
-
-  const handleUpdateExecutive = (updatedExecutive: Executive) => {
-    setSavedExecutives(prev => 
-      prev.map(exec => exec.id === updatedExecutive.id ? updatedExecutive : exec)
-    );
-  };
-
-  useEffect(() => {
-    fetch('/api/executives', {
-      credentials: 'include'
-    })
-      .then(res => {
-        if (res.status === 401) {
-          window.location.href = '/signin';
-          throw new Error('Unauthorized');
-        }
-        return res;
-      })
-      .then(res => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        return res.json();
-      })
-      .then(data => {
-        setExecutives(data);
-        setSearchResults(data); // Initialize search results with all executives
-      })
-      .catch(err => setError(err.message));
-  }, []);
-
-  useEffect(() => {
-    const filteredResults = executives.filter(executive => {
-      const searchTermLower = searchQuery.toLowerCase();
-      return (
-        executive.name.toLowerCase().includes(searchTermLower) ||
-        executive.position.toLowerCase().includes(searchTermLower) ||
-        executive.company.toLowerCase().includes(searchTermLower) ||
-        executive.industry.toLowerCase().includes(searchTermLower)
-      );
-    });
-    setSearchResults(filteredResults);
-  }, [searchQuery, executives]);
 
   return (
-    <div className="container mx-auto p-4">
-      <Navbar /> {/* Added Navbar component */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2 space-y-4">
-          <SearchBar onSearch={(query: string) => {
-            setSearchQuery(query);
-            // Add your search logic here
-          }} /> {/* Fixed onSearch prop */}
-          <FilterBar />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {searchResults.map((executive) => (
-              <ExecutiveCard 
-                key={executive.id} 
-                {...executive} 
-                onSave={handleSaveExecutive}
-                isSaved={savedExecutives.some(saved => saved.id === executive.id)}
-              />
-            ))}
+    <div className="container max-w-4xl mx-auto p-4 flex flex-col h-screen">
+      <div className="flex-1 overflow-y-auto space-y-4 mb-4">
+        {messages.map((message, index) => (
+          <div
+            key={index}
+            className={`p-4 rounded-lg max-w-[80%] ${
+              message.role === 'user'
+                ? 'bg-primary text-primary-foreground ml-auto'
+                : 'bg-muted mr-auto'
+            }`}
+          >
+            {message.content}
           </div>
-          {error && <div className="text-red-500 text-center">{error}</div>}
-          {searchResults.length === 0 && !error && (
-              <div className="text-center text-gray-500 py-12">
-                No executives found. Try adjusting your search criteria.
-              </div>
-            )}
-        </div>
-        <div className="space-y-4">
-          <UserProfile userId={1} />
-          <SavedExecutives 
-            executives={savedExecutives}
-            onRemove={handleRemoveExecutive}
-            onUpdate={handleUpdateExecutive}
-          />
-          <ActivityFeed />
-          <ResearchInsights 
-            executive={executives[0]?.name}
-            industry={executives[0]?.industry}
-          />
-        </div>
+        ))}
+        {isLoading && (
+          <div className="bg-muted p-4 rounded-lg max-w-[80%] mr-auto">
+            Thinking...
+          </div>
+        )}
+      </div>
+      <div className="sticky bottom-0 bg-background p-4">
+        <SearchBar onSearch={handleSearch} placeholder="Ask me anything..." />
       </div>
     </div>
   );
