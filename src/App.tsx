@@ -9,9 +9,9 @@ import NotFound from "./pages/NotFound";
 import SignIn from "./pages/SignIn";
 import { SavedExecutives } from "@/components/SavedExecutives";
 
-const queryClient = new QueryClient();
-
 import { ThemeProvider } from "./components/ThemeProvider";
+
+const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>

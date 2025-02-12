@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { SearchBar } from "@/components/SearchBar";
 import { useTheme } from "@/components/ThemeProvider";
 import { Button } from "@/components/ui/button";
@@ -60,7 +59,7 @@ export default function Index() {
     <div className="min-h-screen bg-background text-foreground">
       <div className="organic-shape w-96 h-96 top-0 right-0" />
       <div className="organic-shape w-[30rem] h-[30rem] bottom-0 left-0" />
-      
+
       <AnimatedBackground />
       <div className="container max-w-4xl mx-auto p-4 flex flex-col min-h-screen relative">
         <div className="fixed top-4 right-4 flex gap-4 z-50">
