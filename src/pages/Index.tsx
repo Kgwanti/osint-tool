@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { SearchBar } from "@/components/SearchBar";
 import { FilterBar } from "@/components/FilterBar";
 import { ExecutiveCard } from "@/components/ExecutiveCard";
-import UserProfile from "@/components/UserProfile"; // Added import
+import { UserProfile } from "@/components/UserProfile"; // Added import
 
 interface Executive {
   id: number;
