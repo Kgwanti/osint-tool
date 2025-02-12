@@ -17,7 +17,7 @@ export const AnimatedBackground = () => {
 
     const stars: Star[] = [];
     const constellations: Constellation[] = [];
-    const starCount = 200;
+    const starCount = 300;
 
     class Star {
       x: number;
@@ -29,9 +29,9 @@ export const AnimatedBackground = () => {
       constructor() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 0.5;
-        this.brightness = Math.random();
-        this.twinkleSpeed = 0.01 + Math.random() * 0.02;
+        this.size = Math.random() * 3 + 1;
+        this.brightness = Math.random() * 0.5 + 0.5;
+        this.twinkleSpeed = 0.015 + Math.random() * 0.025;
       }
 
       update() {
