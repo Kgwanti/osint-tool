@@ -11,9 +11,11 @@ import { SavedExecutives } from "@/components/SavedExecutives";
 
 const queryClient = new QueryClient();
 
+import { ThemeProvider } from "./components/ThemeProvider";
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <ThemeProvider>
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
     <TooltipProvider>
       <Toaster />
       <Sonner />
