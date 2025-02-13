@@ -16,6 +16,7 @@ localPort = 8081
 externalPort = 8081
 
 [workflows]
+runButton = "Run"
 
 [[workflows.workflow]]
 name = "Start Server"
@@ -24,3 +25,11 @@ author = 39298038
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "node src/server/index.js"
+
+[[workflows.workflow]]
+name = "Run"
+author = 39298038
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
