@@ -1,11 +1,6 @@
 
 import OpenRouter from "openrouter";
 
-const openrouter = new OpenRouter({
-  apiKey: process.env.OPENROUTER_API_KEY || "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",
-  baseURL: "https://openrouter.ai/api/v1",
-});
-
 export async function generateResponse(prompt: string): Promise<string> {
   if (!prompt) return "Please provide a message.";
   
@@ -13,29 +8,39 @@ export async function generateResponse(prompt: string): Promise<string> {
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer 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`,
+        "Authorization": "Bearer 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",
         "Content-Type": "application/json",
         "HTTP-Referer": "https://replit.com",
-        "X-Title": "Replit Chat Interface"
+        "X-Title": "Replit AI Research Assistant"
       },
       body: JSON.stringify({
         model: "deepseek/deepseek-r1:free",
-        messages: [{ role: "user", content: prompt }],
+        messages: [{ 
+          role: "user", 
+          content: prompt 
+        }],
         temperature: 0.7,
-        max_tokens: 1000
+        max_tokens: 1000,
+        stream: false
       })
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      console.error("API Error:", error);
-      throw new Error(error.message || "Failed to generate response");
+      const errorData = await response.json();
+      console.error("OpenRouter API Error:", errorData);
+      throw new Error(errorData.error?.message || "Failed to generate response");
     }
 
     const data = await response.json();
-    return data.choices[0]?.message?.content || "I apologize, but I couldn't generate a response.";
+    const content = data.choices?.[0]?.message?.content;
+    
+    if (!content) {
+      throw new Error("No response content received");
+    }
+
+    return content;
   } catch (error: any) {
     console.error("Chat error:", error);
-    return "I apologize, but I encountered an error. Please try again.";
+    return "I apologize, but I encountered an error processing your request. Please try again.";
   }
 }
