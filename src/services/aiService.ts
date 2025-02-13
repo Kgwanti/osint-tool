@@ -2,34 +2,40 @@
 import OpenRouter from "openrouter";
 
 const openrouter = new OpenRouter({
-  apiKey: "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",
+  apiKey: process.env.OPENROUTER_API_KEY || "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",
   baseURL: "https://openrouter.ai/api/v1",
 });
 
 export async function generateResponse(prompt: string): Promise<string> {
+  if (!prompt) return "Please provide a message.";
+  
   try {
-    const response = await openrouter.chat.completions.create({
-      model: "deepseek/deepseek-r1:free",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.7,
-      max_tokens: 1000,
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
       headers: {
-        "HTTP-Referer": "http://localhost:3000",
-        "X-Title": "AI Research Assistant",
-        "Content-Type": "application/json"
-      }
+        "Authorization": `Bearer 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`,
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://replit.com",
+        "X-Title": "Replit Chat Interface"
+      },
+      body: JSON.stringify({
+        model: "deepseek/deepseek-r1:free",
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.7,
+        max_tokens: 1000
+      })
     });
 
-    if (!response?.choices?.[0]?.message?.content) {
-      throw new Error("Invalid response format from AI service");
+    if (!response.ok) {
+      const error = await response.json();
+      console.error("API Error:", error);
+      throw new Error(error.message || "Failed to generate response");
     }
 
-    return response.choices[0].message.content;
+    const data = await response.json();
+    return data.choices[0]?.message?.content || "I apologize, but I couldn't generate a response.";
   } catch (error: any) {
-    console.error("AI Service Error:", error?.response?.data || error.message);
-    if (error?.response?.status === 401) {
-      return "Authentication error. Please check your API key.";
-    }
+    console.error("Chat error:", error);
     return "I apologize, but I encountered an error. Please try again.";
   }
 }
