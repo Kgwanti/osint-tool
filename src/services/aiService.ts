@@ -1,11 +1,10 @@
-
 import OpenRouter from "openrouter";
 
 export async function generateResponse(prompt: string): Promise<string> {
   if (!prompt) return "Please provide a message.";
-  
+
   const OPENROUTER_API_KEY = "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";
-  
+
   try {
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
@@ -16,7 +15,7 @@ export async function generateResponse(prompt: string): Promise<string> {
         "X-Title": "Replit AI Research Assistant"
       },
       body: JSON.stringify({
-        model: "deepseek/deepseek-r1:free",
+        model: "deepseek/deepseek-r1",
         messages: [{ 
           role: "user", 
           content: prompt 
