@@ -20,9 +20,15 @@ export function Chat() {
 
     try {
       const response = await generateResponse(input);
-      setMessages(prev => [...prev, { role: "assistant", content: response }]);
+      if (response) {
+        setMessages(prev => [...prev, { role: "assistant", content: response }]);
+      }
     } catch (error) {
       console.error("Chat error:", error);
+      setMessages(prev => [...prev, { 
+        role: "assistant", 
+        content: "Sorry, I encountered an error processing your request. Please try again." 
+      }]);
     } finally {
       setLoading(false);
     }

@@ -1,3 +1,4 @@
+
 import OpenRouter from "openrouter";
 
 export async function generateResponse(prompt: string): Promise<string> {
@@ -21,18 +22,21 @@ export async function generateResponse(prompt: string): Promise<string> {
           content: prompt 
         }],
         temperature: 0.7,
-        max_tokens: 1000
+        max_tokens: 1000,
+        stream: false
       })
     });
 
     if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
+      const errorData = await response.json();
+      console.error("OpenRouter API Error:", errorData);
+      return "Sorry, I encountered an error processing your request. Please try again.";
     }
 
     const data = await response.json();
-    return data.choices[0].message.content;
+    return data.choices[0]?.message?.content || "I apologize, but I couldn't generate a response.";
   } catch (error) {
-    console.error("Error:", error);
-    throw error;
+    console.error("Chat error:", error);
+    return "Sorry, I encountered an error processing your request. Please try again.";
   }
 }
